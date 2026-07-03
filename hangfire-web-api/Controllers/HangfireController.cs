@@ -11,7 +11,9 @@ public class HangfireController : ControllerBase
     [Route("[action]")]
     public IActionResult Welcome()
     {
+        //Create a job and assign a job id to the jobId variable
         var jobId = BackgroundJob.Enqueue(() => SendWelcomeEmail("Welcome to our app"));
+       
         return Ok($"Job ID{jobId} welcome email was sent to the user");
     }
 
