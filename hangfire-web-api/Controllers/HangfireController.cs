@@ -7,6 +7,7 @@ namespace hangfire_web_api.Controllers;
 [ApiController]
 public class HangfireController : ControllerBase
 {
+    //Fire and forget job that send confirmation email to user after registration
     [HttpPost]
     [Route("[action]")]
     public IActionResult Welcome()
@@ -17,6 +18,7 @@ public class HangfireController : ControllerBase
         return Ok($"Job ID{jobId} welcome email was sent to the user");
     }
 
+    //Delayed job endpoint to send a discount email to the user after certain seconds
     [HttpPost]
     [Route("[action]")]
     public IActionResult Discount()
@@ -27,6 +29,17 @@ public class HangfireController : ControllerBase
 
         return Ok($"Job ID{jobId} discount email will be sent {secondsScheduled} second later");
     }
+
+    //Recurring job endpoint to check the database for recent data each and every minute
+    [HttpPost]
+    [Route("[action]")]
+    public IActionResult DatabaseUpdate()
+    {
+        RecurringJob.AddOrUpdate(()=> Console.WriteLine("Checking the database for recent data"), Cron.Minutely);
+
+        return Ok("Database check job has been scheduled to run every minute");
+    }
+
     public void SendWelcomeEmail(string text)
     {
         Console.WriteLine(text);
